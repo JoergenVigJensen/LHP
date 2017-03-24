@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Opret";
+}
+
+<h2>Opret</h2>
+
+@Html.Partial("_Form")
+
+<div>
+    @Html.ActionLink("Tilbage til oversigt", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

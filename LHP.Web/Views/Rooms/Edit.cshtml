@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "rediger";
+}
+
+<h2>Edit</h2>
+
+@Html.Partial("_Form")
+
+<div>
+    @Html.ActionLink("Tilbage til oversigt", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

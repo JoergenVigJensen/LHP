@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="LOESModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AmountTbl">
+          <Key>
+            <PropertyRef Name="AmountID" />
+          </Key>
+          <Property Name="AmountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Descript" Type="nvarchar" MaxLength="255" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="AmountType" Type="int" />
+        </EntityType>
+        <EntityType Name="BalanceTbl">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BalanceMonth" Type="int" />
+          <Property Name="BalanceYear" Type="int" />
+          <Property Name="BalanceAmount" Type="int" />
+        </EntityType>
+        <EntityType Name="FeatureTbl">
+          <Key>
+            <PropertyRef Name="FeatureID" />
+          </Key>
+          <Property Name="FeatureID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FeatureText" Type="nvarchar" MaxLength="50" />
+          <Property Name="FeatureAmount" Type="float" />
+        </EntityType>
+        <EntityType Name="InvoiceIDTbl">
+          <Key>
+            <PropertyRef Name="InvoiceKey" />
+          </Key>
+          <Property Name="InvoiceKey" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InvoiceRoomID" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoomID" Type="nvarchar" MaxLength="50" />
+          <Property Name="InvoiceDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="InvoiceTbl">
+          <Key>
+            <PropertyRef Name="InvoiceID" />
+          </Key>
+          <Property Name="InvoiceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoomerID" Type="int" />
+          <Property Name="RoomerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="RoomID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Month" Type="int" />
+          <Property Name="Year" Type="int" />
+          <Property Name="PeriodStart" Type="datetime" />
+          <Property Name="PeriodEnd" Type="datetime" />
+          <Property Name="AmountDescr" Type="nvarchar" MaxLength="50" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="PayCode" Type="int" />
+          <Property Name="PayTime" Type="datetime" />
+          <Property Name="Entered" Type="bit" Nullable="false" />
+          <Property Name="InvoiceNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="InvoiceNote" Type="nvarchar" MaxLength="255" />
+          <Property Name="FeatureID" Type="int" />
+        </EntityType>
+        <EntityType Name="RoomAccountTbl">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoomerName" Type="nvarchar" MaxLength="255" />
+          <Property Name="RoomID" Type="nvarchar" MaxLength="50" />
+          <Property Name="EnterMonth" Type="int" />
+          <Property Name="EnterYear" Type="int" />
+          <Property Name="EnterDate" Type="datetime" />
+          <Property Name="PeriodStart" Type="datetime" />
+          <Property Name="PeriodEnd" Type="datetime" />
+          <Property Name="AmountType" Type="int" />
+          <Property Name="Amount" Type="float" />
+          <Property Name="InvoiceIndex" Type="int" />
+        </EntityType>
+        <EntityType Name="RoomCostTbl">
+          <Key>
+            <PropertyRef Name="RoomCostID" />
+          </Key>
+          <Property Name="RoomCostID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoomText" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoomCost" Type="float" />
+        </EntityType>
+        <EntityType Name="RoomerTbl">
+          <Key>
+            <PropertyRef Name="RoomerID" />
+          </Key>
+          <Property Name="RoomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="OutDate" Type="datetime" />
+          <Property Name="Depositum" Type="int" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="Identification" Type="nvarchar" MaxLength="255" />
+          <Property Name="COName" Type="nvarchar" MaxLength="50" />
+          <Property Name="COAdress" Type="nvarchar" MaxLength="50" />
+          <Property Name="COPostCode" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RoomTbl">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="RoomID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="RoomerID" Type="int" />
+          <Property Name="AmountID" Type="int" />
+          <Property Name="Area" Type="int" />
+          <Property Name="Saldo" Type="float" />
+        </EntityType>
+        <EntityContainer Name="LOESModelStoreContainer">
+          <EntitySet Name="AmountTbl" EntityType="Self.AmountTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BalanceTbl" EntityType="Self.BalanceTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FeatureTbl" EntityType="Self.FeatureTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceIDTbl" EntityType="Self.InvoiceIDTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="InvoiceTbl" EntityType="Self.InvoiceTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoomAccountTbl" EntityType="Self.RoomAccountTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoomCostTbl" EntityType="Self.RoomCostTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoomerTbl" EntityType="Self.RoomerTbl" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoomTbl" EntityType="Self.RoomTbl" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LOESModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AmountTbl">
+          <Key>
+            <PropertyRef Name="AmountID" />
+          </Key>
+          <Property Name="AmountID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Descript" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="AmountType" Type="Int32" />
+        </EntityType>
+        <EntityType Name="BalanceTbl">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BalanceMonth" Type="Int32" />
+          <Property Name="BalanceYear" Type="Int32" />
+          <Property Name="BalanceAmount" Type="Int32" />
+        </EntityType>
+        <EntityType Name="FeatureTbl">
+          <Key>
+            <PropertyRef Name="FeatureID" />
+          </Key>
+          <Property Name="FeatureID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FeatureText" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FeatureAmount" Type="Double" />
+        </EntityType>
+        <EntityType Name="InvoiceIDTbl">
+          <Key>
+            <PropertyRef Name="InvoiceKey" />
+          </Key>
+          <Property Name="InvoiceKey" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InvoiceRoomID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoomID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InvoiceDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="InvoiceTbl">
+          <Key>
+            <PropertyRef Name="InvoiceID" />
+          </Key>
+          <Property Name="InvoiceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoomerID" Type="Int32" />
+          <Property Name="RoomerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RoomID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Month" Type="Int32" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="PeriodStart" Type="DateTime" Precision="3" />
+          <Property Name="PeriodEnd" Type="DateTime" Precision="3" />
+          <Property Name="AmountDescr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="PayCode" Type="Int32" />
+          <Property Name="PayTime" Type="DateTime" Precision="3" />
+          <Property Name="Entered" Type="Boolean" Nullable="false" />
+          <Property Name="InvoiceNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InvoiceNote" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FeatureID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RoomAccountTbl">
+          <Key>
+            <PropertyRef Name="AccountID" />
+          </Key>
+          <Property Name="AccountID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoomerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RoomID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EnterMonth" Type="Int32" />
+          <Property Name="EnterYear" Type="Int32" />
+          <Property Name="EnterDate" Type="DateTime" Precision="3" />
+          <Property Name="PeriodStart" Type="DateTime" Precision="3" />
+          <Property Name="PeriodEnd" Type="DateTime" Precision="3" />
+          <Property Name="AmountType" Type="Int32" />
+          <Property Name="Amount" Type="Double" />
+          <Property Name="InvoiceIndex" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RoomCostTbl">
+          <Key>
+            <PropertyRef Name="RoomCostID" />
+          </Key>
+          <Property Name="RoomCostID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoomText" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoomCost" Type="Double" />
+        </EntityType>
+        <EntityType Name="RoomerTbl">
+          <Key>
+            <PropertyRef Name="RoomerID" />
+          </Key>
+          <Property Name="RoomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="OutDate" Type="DateTime" Precision="3" />
+          <Property Name="Depositum" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Identification" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="COName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="COAdress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="COPostCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RoomTbl">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="RoomID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="RoomerID" Type="Int32" />
+          <Property Name="AmountID" Type="Int32" />
+          <Property Name="Area" Type="Int32" />
+          <Property Name="Saldo" Type="Double" />
+        </EntityType>
+        <EntityContainer Name="LOESEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AmountTbl" EntityType="Self.AmountTbl" />
+          <EntitySet Name="BalanceTbl" EntityType="Self.BalanceTbl" />
+          <EntitySet Name="FeatureTbl" EntityType="Self.FeatureTbl" />
+          <EntitySet Name="InvoiceIDTbl" EntityType="Self.InvoiceIDTbl" />
+          <EntitySet Name="InvoiceTbl" EntityType="Self.InvoiceTbl" />
+          <EntitySet Name="RoomAccountTbl" EntityType="Self.RoomAccountTbl" />
+          <EntitySet Name="RoomCostTbl" EntityType="Self.RoomCostTbl" />
+          <EntitySet Name="RoomerTbl" EntityType="Self.RoomerTbl" />
+          <EntitySet Name="RoomTbl" EntityType="Self.RoomTbl" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LOESModelStoreContainer" CdmEntityContainer="LOESEntities">
+          <EntitySetMapping Name="AmountTbl">
+            <EntityTypeMapping TypeName="LOESModel.AmountTbl">
+              <MappingFragment StoreEntitySet="AmountTbl">
+                <ScalarProperty Name="AmountID" ColumnName="AmountID" />
+                <ScalarProperty Name="Descript" ColumnName="Descript" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="AmountType" ColumnName="AmountType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BalanceTbl">
+            <EntityTypeMapping TypeName="LOESModel.BalanceTbl">
+              <MappingFragment StoreEntitySet="BalanceTbl">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BalanceMonth" ColumnName="BalanceMonth" />
+                <ScalarProperty Name="BalanceYear" ColumnName="BalanceYear" />
+                <ScalarProperty Name="BalanceAmount" ColumnName="BalanceAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FeatureTbl">
+            <EntityTypeMapping TypeName="LOESModel.FeatureTbl">
+              <MappingFragment StoreEntitySet="FeatureTbl">
+                <ScalarProperty Name="FeatureID" ColumnName="FeatureID" />
+                <ScalarProperty Name="FeatureText" ColumnName="FeatureText" />
+                <ScalarProperty Name="FeatureAmount" ColumnName="FeatureAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceIDTbl">
+            <EntityTypeMapping TypeName="LOESModel.InvoiceIDTbl">
+              <MappingFragment StoreEntitySet="InvoiceIDTbl">
+                <ScalarProperty Name="InvoiceKey" ColumnName="InvoiceKey" />
+                <ScalarProperty Name="InvoiceRoomID" ColumnName="InvoiceRoomID" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InvoiceTbl">
+            <EntityTypeMapping TypeName="LOESModel.InvoiceTbl">
+              <MappingFragment StoreEntitySet="InvoiceTbl">
+                <ScalarProperty Name="InvoiceID" ColumnName="InvoiceID" />
+                <ScalarProperty Name="RoomerID" ColumnName="RoomerID" />
+                <ScalarProperty Name="RoomerName" ColumnName="RoomerName" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="PeriodStart" ColumnName="PeriodStart" />
+                <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+                <ScalarProperty Name="AmountDescr" ColumnName="AmountDescr" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="PayCode" ColumnName="PayCode" />
+                <ScalarProperty Name="PayTime" ColumnName="PayTime" />
+                <ScalarProperty Name="Entered" ColumnName="Entered" />
+                <ScalarProperty Name="InvoiceNo" ColumnName="InvoiceNo" />
+                <ScalarProperty Name="InvoiceNote" ColumnName="InvoiceNote" />
+                <ScalarProperty Name="FeatureID" ColumnName="FeatureID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoomAccountTbl">
+            <EntityTypeMapping TypeName="LOESModel.RoomAccountTbl">
+              <MappingFragment StoreEntitySet="RoomAccountTbl">
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="RoomerName" ColumnName="RoomerName" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="EnterMonth" ColumnName="EnterMonth" />
+                <ScalarProperty Name="EnterYear" ColumnName="EnterYear" />
+                <ScalarProperty Name="EnterDate" ColumnName="EnterDate" />
+                <ScalarProperty Name="PeriodStart" ColumnName="PeriodStart" />
+                <ScalarProperty Name="PeriodEnd" ColumnName="PeriodEnd" />
+                <ScalarProperty Name="AmountType" ColumnName="AmountType" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="InvoiceIndex" ColumnName="InvoiceIndex" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoomCostTbl">
+            <EntityTypeMapping TypeName="LOESModel.RoomCostTbl">
+              <MappingFragment StoreEntitySet="RoomCostTbl">
+                <ScalarProperty Name="RoomCostID" ColumnName="RoomCostID" />
+                <ScalarProperty Name="RoomText" ColumnName="RoomText" />
+                <ScalarProperty Name="RoomCost" ColumnName="RoomCost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoomerTbl">
+            <EntityTypeMapping TypeName="LOESModel.RoomerTbl">
+              <MappingFragment StoreEntitySet="RoomerTbl">
+                <ScalarProperty Name="RoomerID" ColumnName="RoomerID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="OutDate" ColumnName="OutDate" />
+                <ScalarProperty Name="Depositum" ColumnName="Depositum" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Identification" ColumnName="Identification" />
+                <ScalarProperty Name="COName" ColumnName="COName" />
+                <ScalarProperty Name="COAdress" ColumnName="COAdress" />
+                <ScalarProperty Name="COPostCode" ColumnName="COPostCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoomTbl">
+            <EntityTypeMapping TypeName="LOESModel.RoomTbl">
+              <MappingFragment StoreEntitySet="RoomTbl">
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="RoomerID" ColumnName="RoomerID" />
+                <ScalarProperty Name="AmountID" ColumnName="AmountID" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
