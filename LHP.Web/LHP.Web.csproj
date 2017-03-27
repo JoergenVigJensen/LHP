@@ -147,6 +147,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\COContactsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoomersController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
@@ -155,6 +156,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\COContactListVm.cs" />
+    <Compile Include="ViewModels\COContactVm.cs" />
     <Compile Include="ViewModels\RoomerVm.cs" />
     <Compile Include="ViewModels\RoomListVm.cs" />
     <Compile Include="ViewModels\RoomVm.cs" />
@@ -483,6 +486,12 @@
     <Content Include="Views\Rooms\Index.cshtml" />
     <Content Include="Views\Rooms\_Form.cshtml" />
     <Content Include="Views\Roomers\_Form.cshtml" />
+    <Content Include="Views\COContacts\Create.cshtml" />
+    <Content Include="Views\COContacts\Delete.cshtml" />
+    <Content Include="Views\COContacts\Details.cshtml" />
+    <Content Include="Views\COContacts\Edit.cshtml" />
+    <Content Include="Views\COContacts\Index.cshtml" />
+    <Content Include="Views\COContacts\_Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

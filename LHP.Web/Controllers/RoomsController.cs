@@ -144,6 +144,7 @@ namespace LHP.Web.Controllers
                                 }
                                 dbRoom.Type = roomType;
                                 dbRoom.RoomNb = room.RoomNb;
+                                dbRoom.Active = room.Active;
                                 
                                 state++;
                                 break;

@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="LHPDbContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Employer.cs" />
+    <Compile Include="Models\COContact.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceLine.cs" />

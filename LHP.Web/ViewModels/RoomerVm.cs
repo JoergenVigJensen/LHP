@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -22,7 +23,11 @@ namespace LHP.Web.ViewModels
         public string Email { get; set; }
 
         [DisplayName("CO-kontakt")]
-        public Employer Employer { get; set; }
+        public COContact CoContact { get; set; }
+
+        [DisplayName("Depositum")]
+        [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
+        public decimal Deposit { get; set; }
 
         [DisplayName("Oprettet")]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
@@ -33,6 +38,11 @@ namespace LHP.Web.ViewModels
 
         [DisplayName("Note")]
         public string Comment { get; set; }
-        public ICollection<SelectListItem> Employers { get; set; }
+
+        public Room Room { get; set; }
+
+        public ICollection<SelectListItem> CoContacts { get; set; }
+        public ICollection<SelectListItem> RoomList { get; set; }
+
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace LHP.DAL.Models
 {
-    public class Employer
+    public class COContact
     {
-        public int EmployerId { get; set; }
+        public int COContactId { get; set; }
         public string Name { get; set; }
         public string Contact { get; set; }
         public string Phone { get; set; }
@@ -16,5 +16,6 @@ namespace LHP.DAL.Models
         public string Address { get; set; }
         public string ZipCode { get; set; }
         public string City { get; set; }
+        public string Comment { get; set; }
     }
 }

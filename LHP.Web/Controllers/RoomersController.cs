@@ -36,19 +36,34 @@ namespace LHP.Web.Controllers
                     Comment = roomer.Comment,
                     Phone = roomer.Phone,
                     Registrated = roomer.Registrated,
-                    Identification = roomer.Identification
+                    Identification = roomer.Identification,
+                    CoContact =  roomer.CoContact,
+                    Deposit = roomer.Deposit
                 };
+                vm.Room = dblhp.Rooms.FirstOrDefault(x => x.CurrentRoomer.RoomerId == roomer.RoomerId);
             }
             else
             {
                 vm.Registrated = DateTime.Now.Date;
             }
 
-            vm.Employers = dblhp.Employers.Select(x => new SelectListItem()
+            vm.CoContacts = dblhp.CoContacts.Select(x => new SelectListItem()
             {
-                Value = x.EmployerId.ToString(),
+                Value = x.COContactId.ToString(),
                 Text = x.Name
             }).ToList();
+
+            vm.RoomList = dblhp.Rooms.Where(x=>x.CurrentRoomer == null || x.CurrentRoomer.RoomerId == roomer.RoomerId).Select(x => new SelectListItem()
+            {
+                Value = x.RoomId.ToString(),
+                Text = x.RoomNb + " - " + x.Type.Description
+            }).ToList();
+            vm.RoomList.Add(new SelectListItem()
+            {
+                Value = "",
+                Text = "Ikke tilknyttet værelse."
+            });
+
 
             return vm;
         }
@@ -59,6 +74,9 @@ namespace LHP.Web.Controllers
             {
 
                 Roomer dbRoomer = null;
+                Room dbRoom = null;
+                Room newRoom = null;
+
                 int state = 1;
 
                 while (ModelState.IsValid && state > 0)
@@ -81,6 +99,8 @@ namespace LHP.Web.Controllers
                                     dbRoomer = db.Roomers.FirstOrDefault(x => x.RoomerId == vm.RoomerId);
                                     if (dbRoomer == null)
                                           throw new Exception(string.Format("Hmmm... gæsten med nr {0} blev ikke fundet.",vm.RoomerId));
+
+                                    dbRoom = db.Rooms.FirstOrDefault(x => x.CurrentRoomer.RoomerId == vm.RoomerId);
                                 }
                                 else
                                 {
@@ -99,16 +119,30 @@ namespace LHP.Web.Controllers
                             dbRoomer.Email = vm.Email;
                             dbRoomer.Identification = vm.Identification;
                             dbRoomer.Registrated = vm.Registrated;
-                            if (vm.Employer != null)
+                            dbRoomer.Deposit = vm.Deposit;
+                            if (vm.CoContact != null)
                             {
-                                var emp = db.Employers.FirstOrDefault(x => x.EmployerId == vm.Employer.EmployerId);
+                                var emp = db.CoContacts.FirstOrDefault(x => x.COContactId == vm.CoContact.COContactId);
                                 if (emp != null)
-                                    dbRoomer.Employer = emp;
+                                    dbRoomer.CoContact = emp;
                             }
                             state++;
                             break;
-
                         case 5:
+                            if (dbRoom != null)
+                            {
+                                if (vm.Room.RoomId != dbRoom.RoomId)
+                                {
+                                    dbRoom.CurrentRoomer = null;
+                                    if (vm.Room.RoomId > 0)
+                                        newRoom = db.Rooms.FirstOrDefault(x => x.RoomId == vm.Room.RoomId);
+                                    if (newRoom != null)
+                                        newRoom.CurrentRoomer = dbRoomer;
+                                }
+                            }
+                            state++;
+                            break;
+                        case 6:                            
                             if (vm.RoomerId > 0)
                             {
                                 db.Entry(dbRoomer).State = EntityState.Modified;
@@ -117,6 +151,12 @@ namespace LHP.Web.Controllers
                             {
                                 db.Roomers.Add(dbRoomer);
                             }
+                            if (dbRoom != null)
+                                db.Entry(dbRoom).State = EntityState.Modified;
+
+                            if (newRoom != null)
+                                db.Entry(newRoom).State = EntityState.Modified;
+
                             state++;
                             break;
                         default:                            
@@ -129,9 +169,9 @@ namespace LHP.Web.Controllers
                 if (state == 0)
                     return true;
 
-                vm.Employers = db.Employers.Select(x => new SelectListItem()
+                vm.CoContacts = db.CoContacts.Select(x => new SelectListItem()
                 {
-                    Value = x.EmployerId.ToString(),
+                    Value = x.COContactId.ToString(),
                     Text = x.Name
                 }).ToList();
 
@@ -186,7 +226,10 @@ namespace LHP.Web.Controllers
 
             using (var db = new LHPDbContext())
             {
-                Roomer roomer = dblhp.Roomers.Find(id);
+                Roomer roomer = dblhp
+                    .Roomers
+                    .Include(x=>x.CoContact)
+                    .FirstOrDefault(x=>x.RoomerId == id);
                 if (roomer == null)
                 {
                     return HttpNotFound();
@@ -202,7 +245,6 @@ namespace LHP.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(RoomerVm roomer)
         {
-
             if (SaveForm(roomer))
                return RedirectToAction("Index");
 

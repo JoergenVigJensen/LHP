@@ -20,7 +20,7 @@ namespace LHP.DAL
         public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceLine> InvoiceLines { get; set; }
-        public DbSet<Employer> Employers { get; set; }
+        public DbSet<COContact> CoContacts { get; set; }
         public DbSet<RoomProfileRelation> RoomProfileRelations { get; set; }
         public DbSet<RoomActivity> RoomActivities { get; set; }
         public DbSet<RoomerActivity> RoomerActivities { get; set; }

@@ -13,7 +13,9 @@ namespace LHP.DAL.Models
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public Employer Employer { get; set; }
+
+        public decimal Deposit { get; set; }
+        public COContact CoContact { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Registrated { get; set; }
