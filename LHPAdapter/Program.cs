@@ -52,7 +52,7 @@ namespace LHPAdapter
                     var lhpRoomer = new LHP.DAL.Models.Roomer();
                     lhpRoomer.Comment = roomer.Note;
                     lhpRoomer.Name = roomer.FirstName + " " + roomer.LastName;
-                    lhpRoomer.Indentification = roomer.Identification;
+                    lhpRoomer.Identification = roomer.Identification;
                     lhpRoomer.Registrated = roomer.StartDate.Value;
                     lhpRoomer.Phone = roomer.Phone;
                     

@@ -20,7 +20,20 @@ namespace LHP.Web.Controllers
         // GET: Rooms
         public ActionResult Index()
         {
-            return View(db.Rooms.ToList());
+
+            var rooms = db.Rooms
+                .Include(x => x.Type)
+                .Include(x => x.CurrentRoomer).Select(x => new RoomListVm()
+                {
+                    Id = x.RoomId,
+                    RoomNb = x.RoomNb,
+                    Active = x.Active,
+                    RoomType = x.Type.Description,
+                    RoomAmount = x.Type.Amount,
+                    RoomerName = (x.CurrentRoomer == null) ? "" : x.CurrentRoomer.Name
+                });
+
+            return View(rooms);
         }
 
         // GET: Rooms/Details/5

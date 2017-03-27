@@ -45,4 +45,11 @@ namespace LHP.DAL.Models
         Activated,
         Deactivated
     }
+
+    public enum InvoiceState
+    {
+        Created,
+        Printed,
+        Entered
+    }
  }

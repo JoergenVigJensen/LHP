@@ -16,8 +16,7 @@ namespace LHP.DAL.Models
         public bool Valid { get; set; }
         public ICollection<InvoiceLine> InvoiceLines { get; set; }
         public InvoiceType InvoiceType { get; set; }
-
-
+        public InvoiceState InvoiceState { get; set; }
 
     }
 }

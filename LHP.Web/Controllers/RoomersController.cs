@@ -8,19 +8,137 @@ using System.Web;
 using System.Web.Mvc;
 using LHP.DAL;
 using LHP.DAL.Models;
+using LHP.Web.ViewModels;
 
 namespace LHP.Web.Controllers
 {
     public class RoomersController : Controller
     {
-        private LHPDbContext db = new LHPDbContext();
+        private LHPDbContext dblhp = new LHPDbContext();
 
         // GET: Roomers
         public ActionResult Index()
         {
-            return View(db.Roomers.ToList());
+            return View(dblhp.Roomers.ToList());
         }
 
+
+        public RoomerVm LoadForm(Roomer roomer)
+        {
+            RoomerVm vm = new RoomerVm();
+            if (roomer != null)
+            {
+                vm = new RoomerVm()
+                {
+                    RoomerId = roomer.RoomerId,
+                    Name = roomer.Name,
+                    Email = roomer.Email,
+                    Comment = roomer.Comment,
+                    Phone = roomer.Phone,
+                    Registrated = roomer.Registrated,
+                    Identification = roomer.Identification
+                };
+            }
+            else
+            {
+                vm.Registrated = DateTime.Now.Date;
+            }
+
+            vm.Employers = dblhp.Employers.Select(x => new SelectListItem()
+            {
+                Value = x.EmployerId.ToString(),
+                Text = x.Name
+            }).ToList();
+
+            return vm;
+        }
+
+        public bool SaveForm(RoomerVm vm)
+        {
+            using (var db = new LHPDbContext())
+            {
+
+                Roomer dbRoomer = null;
+                int state = 1;
+
+                while (ModelState.IsValid && state > 0)
+                {
+                    switch (state)
+                    {
+                        case 1:
+                            if (string.IsNullOrEmpty(vm.Name))
+                                ModelState.AddModelError("","Gæsten skal have et navn");
+                            state++;
+                            break;
+                        case 2:
+                            state++;
+                            break;
+                        case 3:
+                            try
+                            {
+                                if (vm.RoomerId > 0)
+                                {
+                                    dbRoomer = db.Roomers.FirstOrDefault(x => x.RoomerId == vm.RoomerId);
+                                    if (dbRoomer == null)
+                                          throw new Exception(string.Format("Hmmm... gæsten med nr {0} blev ikke fundet.",vm.RoomerId));
+                                }
+                                else
+                                {
+                                    dbRoomer = new Roomer();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                ModelState.AddModelError("","Fejl: " + ex.Message);
+                            }
+                            state++;
+                            break;
+                        case 4:
+                            dbRoomer.Name = vm.Name;
+                            dbRoomer.Comment = vm.Comment;
+                            dbRoomer.Email = vm.Email;
+                            dbRoomer.Identification = vm.Identification;
+                            dbRoomer.Registrated = vm.Registrated;
+                            if (vm.Employer != null)
+                            {
+                                var emp = db.Employers.FirstOrDefault(x => x.EmployerId == vm.Employer.EmployerId);
+                                if (emp != null)
+                                    dbRoomer.Employer = emp;
+                            }
+                            state++;
+                            break;
+
+                        case 5:
+                            if (vm.RoomerId > 0)
+                            {
+                                db.Entry(dbRoomer).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                db.Roomers.Add(dbRoomer);
+                            }
+                            state++;
+                            break;
+                        default:                            
+                            db.SaveChanges();
+                            state = 0;
+                            break;
+                    }
+                }
+
+                if (state == 0)
+                    return true;
+
+                vm.Employers = db.Employers.Select(x => new SelectListItem()
+                {
+                    Value = x.EmployerId.ToString(),
+                    Text = x.Name
+                }).ToList();
+
+                return false;
+
+            }
+        }
         // GET: Roomers/Details/5
         public ActionResult Details(int? id)
         {
@@ -28,7 +146,7 @@ namespace LHP.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Roomer roomer = db.Roomers.Find(id);
+            Roomer roomer = dblhp.Roomers.Find(id);
             if (roomer == null)
             {
                 return HttpNotFound();
@@ -39,7 +157,8 @@ namespace LHP.Web.Controllers
         // GET: Roomers/Create
         public ActionResult Create()
         {
-            return View();
+            var vm = LoadForm(null);
+            return View(vm);
         }
 
         // POST: Roomers/Create
@@ -47,14 +166,10 @@ namespace LHP.Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "RoomerId,Name,Phone,Email,Registrated,Indentification,Comment")] Roomer roomer)
+        public ActionResult Create(RoomerVm roomer)
         {
-            if (ModelState.IsValid)
-            {
-                db.Roomers.Add(roomer);
-                db.SaveChanges();
+            if (SaveForm(roomer))
                 return RedirectToAction("Index");
-            }
 
             return View(roomer);
         }
@@ -62,31 +177,35 @@ namespace LHP.Web.Controllers
         // GET: Roomers/Edit/5
         public ActionResult Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Roomer roomer = db.Roomers.Find(id);
-            if (roomer == null)
+
+
+            using (var db = new LHPDbContext())
             {
-                return HttpNotFound();
+                Roomer roomer = dblhp.Roomers.Find(id);
+                if (roomer == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var vm = LoadForm(roomer);
+                return View(vm);
             }
-            return View(roomer);
+
         }
 
-        // POST: Roomers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RoomerId,Name,Phone,Email,Registrated,Indentification,Comment")] Roomer roomer)
+        public ActionResult Edit(RoomerVm roomer)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(roomer).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            if (SaveForm(roomer))
+               return RedirectToAction("Index");
+
             return View(roomer);
         }
 
@@ -97,7 +216,7 @@ namespace LHP.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Roomer roomer = db.Roomers.Find(id);
+            Roomer roomer = dblhp.Roomers.Find(id);
             if (roomer == null)
             {
                 return HttpNotFound();
@@ -110,9 +229,9 @@ namespace LHP.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Roomer roomer = db.Roomers.Find(id);
-            db.Roomers.Remove(roomer);
-            db.SaveChanges();
+            Roomer roomer = dblhp.Roomers.Find(id);
+            dblhp.Roomers.Remove(roomer);
+            dblhp.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -120,7 +239,7 @@ namespace LHP.Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                dblhp.Dispose();
             }
             base.Dispose(disposing);
         }
