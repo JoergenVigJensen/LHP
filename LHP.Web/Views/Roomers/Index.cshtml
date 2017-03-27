@@ -21,12 +21,6 @@
             @Html.DisplayNameFor(model => model.Email)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Registrated)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Identification)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Comment)
         </th>
         <th></th>
@@ -34,28 +28,24 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        <td class="col-md-3">
             @Html.DisplayFor(modelItem => item.Name)
         </td>
-        <td>
+        <td  class="col-md-2">
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
-        <td>
+        <td class="col-md-3">
             @Html.DisplayFor(modelItem => item.Email)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Registrated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Identification)
-        </td>
-        <td>
+        <td class="col-md-2">
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RoomerId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RoomerId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RoomerId })
+        <td class="col-md-3">
+            @Html.ActionLink(" ", "Edit", new { id = item.RoomerId}, new { @class = "btn-row btn-edit glyphicon glyphicon-edit", @title="Rediger"})
+            @Html.ActionLink(" ", "Details", new { id = item.RoomerId }, new { @class = "btn-row btn-profile glyphicon glyphicon-user", @title = "Detaljer og historik" })
+            @Html.ActionLink(" ", "Delete", new { id = item.RoomerId }, new { @class = "btn-row btn-primary glyphicon glyphicon-file", @title = "Fakturer" })
+            @Html.ActionLink(" ", "Delete", new { id = item.RoomerId }, new { @class = "btn-row btn-danger glyphicon glyphicon-log-out", @title = "Tjek ud" })
+
         </td>
     </tr>
 }

@@ -26,7 +26,7 @@ namespace LHP.Web.ViewModels
         public COContact CoContact { get; set; }
 
         [DisplayName("Depositum")]
-        [DisplayFormat(DataFormatString = "{0:F2}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:N2}", ApplyFormatInEditMode = true)]
         public decimal Deposit { get; set; }
 
         [DisplayName("Oprettet")]

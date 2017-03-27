@@ -10,18 +10,20 @@ using System.Web.Mvc;
 using LHP.DAL;
 using LHP.DAL.Models;
 using LHP.Web.ViewModels;
+using Mvc.JQuery.DataTables;
+using System.Globalization;
 
 namespace LHP.Web.Controllers
 {
     public class RoomsController : Controller
     {
-        private LHPDbContext db = new LHPDbContext();
+        private LHPDbContext lhpDb = new LHPDbContext();
 
         // GET: Rooms
         public ActionResult Index()
         {
 
-            var rooms = db.Rooms
+            var rooms = lhpDb.Rooms
                 .Include(x => x.Type)
                 .Include(x => x.CurrentRoomer).Select(x => new RoomListVm()
                 {
@@ -43,7 +45,7 @@ namespace LHP.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Room room = db.Rooms.Find(id);
+            Room room = lhpDb.Rooms.Find(id);
             if (room == null)
             {
                 return HttpNotFound();
@@ -60,7 +62,7 @@ namespace LHP.Web.Controllers
             return View(vm);
         }
 
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(RoomVm room)
@@ -74,8 +76,7 @@ namespace LHP.Web.Controllers
 
         private bool SaveForm(RoomVm room)
         {
-            int roomtypeId = 0;
-
+            
             RoomType roomType = null;
             Room dbRoom = null;
 
@@ -89,108 +90,108 @@ namespace LHP.Web.Controllers
                 switch (state)
                 {
                     case 1:
-                        {
-                            if (string.IsNullOrEmpty(room.RoomNb))
-                                ModelState.AddModelError("","Der skal angives et værelsesnummer.");
-                            state++;
-                            break;
-                        }
+                    {
+                        if (string.IsNullOrEmpty(room.RoomNb))
+                            ModelState.AddModelError("", "Der skal angives et værelsesnummer.");
+                        state++;
+                        break;
+                    }
                     case 2:
-                        {
-                            roomType = db.RoomTypes.Find(room.Type.RoomTypeId);
-                            if (roomType == null)
-                                ModelState.AddModelError("", "Værelsestype blev ikke fundet.");
-                            state++;
-                            break;
-                        }
+                    {
+                        roomType = lhpDb.RoomTypes.Find(room.Type.RoomTypeId);
+                        if (roomType == null)
+                            ModelState.AddModelError("", "Værelsestype blev ikke fundet.");
+                        state++;
+                        break;
+                    }
                     case 3:
-                        {
-                            state++;
-                            break;
-                        }
+                    {
+                        state++;
+                        break;
+                    }
                     case 4:
+                    {
+                        try
                         {
-                            try
-                            {
-                                if (roomType == null)
-                                    throw new Exception("Der er ikke valg værelsestype.");
+                            if (roomType == null)
+                                throw new Exception("Der er ikke valg værelsestype.");
 
-                                if (room.RoomId > 0)
-                                {
-                                    dbRoom = db.Rooms
-                                        .Include(x => x.Type)
-                                        .Include(x => x.CurrentRoomer)
-                                        .FirstOrDefault(x => x.RoomId == room.RoomId);
-                                    if (dbRoom == null)
-                                        throw new Exception(string.Format("Værelse {0} blev ikke fundet", room.RoomId));
-                                }
-                                else
-                                {
-                                    dbRoom = new Room();
-                                }
-                                if (room.Type != dbRoom.Type)
-                                {
-                                    profile =
-                                        db.RoomProfileRelations.OrderByDescending(x => x.RoomProfileRelationId)
-                                            .FirstOrDefault(x => x.Room.RoomId == dbRoom.RoomId);
-                                    if (profile != null)
-                                        profile.DeActivated = DateTime.Now;
-                                    newProfile = new RoomProfileRelation()
-                                    {
-                                        Room = dbRoom,
-                                        RoomType = room.Type,
-                                        Activated = DateTime.Now
-                                    };
-                                }
-                                dbRoom.Type = roomType;
-                                dbRoom.RoomNb = room.RoomNb;
-                                dbRoom.Active = room.Active;
-                                
-                                state++;
-                                break;
-                            }
-                            catch (Exception ex)
+                            if (room.RoomId > 0)
                             {
-                                ModelState.AddModelError("", ex.Message);
-                            }
-                            state++;
-                            break;
-                        }
-                    case 5:
-                        {
-                            try
-                            {
+                                dbRoom = lhpDb.Rooms
+                                    .Include(x => x.Type)
+                                    .Include(x => x.CurrentRoomer)
+                                    .FirstOrDefault(x => x.RoomId == room.RoomId);
                                 if (dbRoom == null)
-                                    throw new Exception("Værelset kan ikke gemmes.");
-
-                                if (room.RoomId > 0)
-                                {
-                                    db.Entry(dbRoom).State = EntityState.Modified;
-                                }
-                                else
-                                {
-                                    db.Rooms.Add(dbRoom);
-                                }
-
-                                if (profile != null)
-                                    db.Entry(profile).State = EntityState.Modified;
-
-                                db.RoomProfileRelations.Add(newProfile);
+                                    throw new Exception(string.Format("Værelse {0} blev ikke fundet", room.RoomId));
                             }
-
-                            catch (Exception ex)
+                            else
                             {
-                                ModelState.AddModelError("", ex.Message);
+                                dbRoom = new Room();
                             }
+                            if (room.Type != dbRoom.Type)
+                            {
+                                profile =
+                                    lhpDb.RoomProfileRelations.OrderByDescending(x => x.RoomProfileRelationId)
+                                        .FirstOrDefault(x => x.Room.RoomId == dbRoom.RoomId);
+                                if (profile != null)
+                                    profile.DeActivated = DateTime.Now;
+                                newProfile = new RoomProfileRelation()
+                                {
+                                    Room = dbRoom,
+                                    RoomType = room.Type,
+                                    Activated = DateTime.Now
+                                };
+                            }
+                            dbRoom.Type = roomType;
+                            dbRoom.RoomNb = room.RoomNb;
+                            dbRoom.Active = room.Active;
+
                             state++;
                             break;
                         }
-                    default:
+                        catch (Exception ex)
                         {
-                            db.SaveChanges();
-                            state = 0;
-                            break;
+                            ModelState.AddModelError("", ex.Message);
                         }
+                        state++;
+                        break;
+                    }
+                    case 5:
+                    {
+                        try
+                        {
+                            if (dbRoom == null)
+                                throw new Exception("Værelset kan ikke gemmes.");
+
+                            if (room.RoomId > 0)
+                            {
+                                lhpDb.Entry(dbRoom).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                lhpDb.Rooms.Add(dbRoom);
+                            }
+
+                            if (profile != null)
+                                lhpDb.Entry(profile).State = EntityState.Modified;
+
+                            lhpDb.RoomProfileRelations.Add(newProfile);
+                        }
+
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("", ex.Message);
+                        }
+                        state++;
+                        break;
+                    }
+                    default:
+                    {
+                        lhpDb.SaveChanges();
+                        state = 0;
+                        break;
+                    }
                 }
             }
 
@@ -212,21 +213,21 @@ namespace LHP.Web.Controllers
                     CurretRoomer = (room.CurrentRoomer == null) ? "" : room.CurrentRoomer.RoomerId.ToString(),
                     RoomNb = room.RoomNb,
                     Active = room.Active,
-                    RoomTypeId =  room.Type.RoomTypeId
+                    RoomTypeId = room.Type.RoomTypeId
                 };
             }
             else
             {
-                vm.Type = new RoomType(){RoomTypeId = 0, Description =  "Vælg en type"};
+                vm.Type = new RoomType() {RoomTypeId = 0, Description = "Vælg en type"};
                 vm.RoomNb = "";
             }
-            vm.RoomTypes = db.RoomTypes.Select(x => new SelectListItem()
+            vm.RoomTypes = lhpDb.RoomTypes.Select(x => new SelectListItem()
             {
                 Value = x.RoomTypeId.ToString(),
                 Text = x.Description + " " + x.Amount.ToString()
             }).ToList();
 
-            vm.ActiveRoomers = db.Roomers.Select(x => new SelectListItem()
+            vm.ActiveRoomers = lhpDb.Roomers.Select(x => new SelectListItem()
             {
                 Value = x.RoomerId.ToString(),
                 Text = x.Name
@@ -241,7 +242,7 @@ namespace LHP.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Room room = db.Rooms
+            Room room = lhpDb.Rooms
                 .Include(x => x.Type)
                 .Include(x => x.CurrentRoomer)
                 .FirstOrDefault(x => x.RoomId == id);
@@ -274,7 +275,7 @@ namespace LHP.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Room room = db.Rooms.Find(id);
+            Room room = lhpDb.Rooms.Find(id);
             if (room == null)
             {
                 return HttpNotFound();
@@ -287,9 +288,9 @@ namespace LHP.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Room room = db.Rooms.Find(id);
-            db.Rooms.Remove(room);
-            db.SaveChanges();
+            Room room = lhpDb.Rooms.Find(id);
+            lhpDb.Rooms.Remove(room);
+            lhpDb.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -297,9 +298,50 @@ namespace LHP.Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                lhpDb.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public DataTablesResult<RoomListVm> GetRoomsDataTable(DataTablesParam dataTablesParam)
+        {
+            using (var db = new LHPDbContext())
+            {
+                var rooms = db.Rooms
+                    .Include(x=>x.Type)
+                    .Include(x=>x.CurrentRoomer)
+                    .ToList();
+
+                List<RoomListVm> roomList = new List<RoomListVm>();
+                foreach (var room in rooms)
+                {
+                    var r = new RoomListVm()
+                    {
+                        Id = room.RoomId,
+                        RoomNb = room.RoomNb,
+                        Active = room.Active,
+                        RoomerName = (room.CurrentRoomer == null)?"" : room.CurrentRoomer.Name,
+                        RoomAmount = room.Type.Amount,
+                        EditBtn =
+                            "<a href='" + Url.Action("Edit", "Rooms", new {id = room.RoomId}) +
+                            "' class='btn btn-primary btn-xs btn-fixed'></a>",
+                        DetailsBtn =
+                            "<a href='" + Url.Action("Details", "Rooms", new {id = room.RoomId}) +
+                            "' class='btn btn-primary btn-xs btn-fixed'>Detaljer</a>",
+                        BillBtn = ""
+                    };
+
+                    roomList.Add(r);
+                }
+
+                return DataTablesResult.Create(roomList.AsQueryable(), dataTablesParam,
+                    x => new
+                    {
+                        RoomAmount = string.Format(CultureInfo.CurrentCulture, "{0:N2}", x.RoomAmount),
+                        Active = (x.Active)? "Ja":"Nej"
+                    });
+
+            }
         }
     }
 }

@@ -12,9 +12,11 @@ namespace LHP.Web
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery-ui-{version}.js",
                         "~/Scripts/datepicker-da.js",
+                        "~/Scripts/angular.js",
                         "~/Scripts/DataTables/jquery.dataTables.js",
                         "~/Scripts/DataTables/dataTables.bootstrap.js",
-                        "~/Scripts/site.js"));
+                        "~/Scripts/site.js",
+                        "~/Scripts/App/LHPApp.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -32,6 +34,7 @@ namespace LHP.Web
                       "~/Content/bootstrap.css",
                         "~/Content/DataTables/css/jquery.dataTables.css",
                       "~/Content/DataTables/css/dataTables.bootstrap.css",
+                      "~/Content/font-awesome.css",
                       "~/Content/site.css"));
         }
     }

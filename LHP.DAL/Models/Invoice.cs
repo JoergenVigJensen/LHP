@@ -17,6 +17,8 @@ namespace LHP.DAL.Models
         public ICollection<InvoiceLine> InvoiceLines { get; set; }
         public InvoiceType InvoiceType { get; set; }
         public InvoiceState InvoiceState { get; set; }
+        public Room Room { get; set; }
+        public Roomer Roomer { get; set; }
 
     }
 }

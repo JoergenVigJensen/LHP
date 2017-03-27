@@ -41,11 +41,15 @@ namespace LHP.Web.Controllers
                     Deposit = roomer.Deposit
                 };
                 vm.Room = dblhp.Rooms.FirstOrDefault(x => x.CurrentRoomer.RoomerId == roomer.RoomerId);
+
             }
             else
             {
                 vm.Registrated = DateTime.Now.Date;
             }
+
+            if (vm.Room == null)
+                vm.Room = new Room();
 
             vm.CoContacts = dblhp.CoContacts.Select(x => new SelectListItem()
             {
@@ -132,14 +136,20 @@ namespace LHP.Web.Controllers
                             if (dbRoom != null)
                             {
                                 if (vm.Room.RoomId != dbRoom.RoomId)
-                                {
                                     dbRoom.CurrentRoomer = null;
-                                    if (vm.Room.RoomId > 0)
-                                        newRoom = db.Rooms.FirstOrDefault(x => x.RoomId == vm.Room.RoomId);
-                                    if (newRoom != null)
-                                        newRoom.CurrentRoomer = dbRoomer;
-                                }
                             }
+
+                            if (vm.Room.RoomId > 0)
+                            {
+                                newRoom = db.Rooms.FirstOrDefault(x => x.RoomId == vm.Room.RoomId);
+                                if (newRoom == null)
+                                {
+                                    ModelState.AddModelError("",string.Format("Værelse-id {0} blev ikke fundet", vm.Room.RoomId));
+                                    break;
+                                }
+                            }                            
+
+                            newRoom.CurrentRoomer = dbRoomer;
                             state++;
                             break;
                         case 6:                            
@@ -201,9 +211,6 @@ namespace LHP.Web.Controllers
             return View(vm);
         }
 
-        // POST: Roomers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(RoomerVm roomer)

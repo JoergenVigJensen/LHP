@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,8 @@ namespace LHP.DAL.Models
         public  bool Active { get; set; }
 
         [Description("Aktiv Gælst")]
-        public Roomer CurrentRoomer { get; set; }
+        public virtual Roomer CurrentRoomer { get; set; }
+
         public ICollection<RoomProfileRelation> RoomProfileRelations { get; set; } = new HashSet<RoomProfileRelation>();
     }
 }

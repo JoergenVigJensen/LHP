@@ -1,0 +1,12 @@
+﻿@using Mvc.JQuery.DataTables
+@using LHP.Web.Controllers
+@{
+    var vm = Html.DataTableVm("RoomsList", (RoomsController ctrl) => ctrl.GetRoomsDataTable(null));
+
+    vm.StateSave = true;
+
+    vm.Language = "{ 'sUrl': '" + Url.Content("~/Content/jquery.dataTables.lang.da-DK.json") + "' }";
+}
+
+@Html.Partial("DataTable", vm)
+

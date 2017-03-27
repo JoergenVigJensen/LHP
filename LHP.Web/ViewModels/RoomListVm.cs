@@ -4,26 +4,37 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using Mvc.JQuery.DataTables;
 
 namespace LHP.Web.ViewModels
 {
     public class RoomListVm
     {
+        [DataTables(Visible = false)]
         public int Id { get; set; }
-        [DisplayName("Værelsesnr.")]
+        [DataTables(DisplayName = "Værelse", Searchable = true)]
         public string RoomNb { get; set; }
 
-        [DisplayName("Aktivt")]
+        [DataTables(DisplayName = "Aktivt", Searchable = true)]
         public bool Active { get; set; }
 
-        [DisplayName("Værelsestype")]
+        [DataTables(DisplayName = "Værelsestype", Searchable = true)]
         public string RoomType { get; set; }
 
-        [DisplayName("Leje")]
-        [DisplayFormat(DataFormatString = "{0:N}", ApplyFormatInEditMode = true)]
+        [DataTables(DisplayName = "Beløb",CssClass="text-right")]
         public double RoomAmount { get; set; }
 
-        [DisplayName("Gæst")]
+        [DataTables(DisplayName = "Beboer")]
         public string RoomerName { get; set; }
+
+        [DataTables(DisplayName = "", Sortable = false, Width = "78px")]
+        public string DetailsBtn { get; set; }
+
+        [DataTables(DisplayName = "", Sortable = false, Width = "78px")]
+        public string EditBtn { get; set; }
+
+        [DataTables(DisplayName = "", Sortable = false, Width = "78px")]
+        public string BillBtn { get; set; }
+
     }
 }
